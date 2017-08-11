@@ -1,0 +1,86 @@
+<div class="container">
+  <div class="row">
+    <div class="panel panel-primary col-sm-5 block panel-box">
+      <div class="panel-heading">
+        <p class="panel-title">Add new User</p>
+      </div>
+      <div class="panel-body">
+        <form
+        #addForm="ngForm"
+        novalidate>
+          <div class="input-group input-box">
+            <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+            <input type="text" class="form-control" placeholder="Username" name="username" ngModel required>
+          </div>
+          <div class="input-group input-box">
+            <span class="input-group-addon"><span class="glyphicon glyphicon-briefcase"></span></span>
+            <select class="form-control" name="department" ngModel required>
+              <option value="" disabled selected hidden>Department</option>
+              <option *ngFor="let department of departments">{{department.Title}}</option>
+            </select>
+          </div>
+          <button [disabled]="addForm.invalid" type="submit" (click)="AddUser(addForm)" class="btn btn-primary">Add</button>
+        </form>
+      </div>
+    </div>
+    <div class="panel panel-primary col-sm-5 block panel-box">
+      <div class="panel-heading">
+        <p class="panel-title">Users</p>
+      </div>
+      <div class="panel-body">
+        <div class="btn-group">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal" [disabled]="!choosenUser" (click)="StoreUser()">Edit</button>
+          <button type="button" class="btn btn-primary" (click)="DeleteUser()" [disabled]="!choosenUser">Delete</button>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>UserName</th>
+              <th>Departament</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of users" (click)="ChooseUser(user)" [class.active]="isSelected(user)">
+              <td>{{user.Id}}</td>
+              <td>{{user.UserName}}</td>
+              <td>{{user.DepartmentTitle}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="editModal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">Edit User</h4>
+      </div>
+      <form
+      #editForm="ngForm"
+      *ngIf="choosenUser"
+      novalidate>
+      <div class="modal-body input-box">
+        <div class="input-group">
+          <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+          <input type="text" class="form-control" placeholder="Username" name="username" [(ngModel)]="choosenUser.UserName" required>
+        </div>
+        <div class="input-group input-box">
+          <span class="input-group-addon"><span class="glyphicon glyphicon-briefcase"></span></span>
+          <select class="form-control" name="department" [(ngModel)]="choosenUser.DepartmentTitle" required>
+            <option value="" disabled selected hidden>Department</option>
+            <option *ngFor="let department of departments">{{department.Title}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="RestoreUser()">Cancel</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="EditUser(editForm)" [disabled]="editForm.invalid">Submit</button>
+      </div>
+    </form>
+  </div>
+ </div>
+</div>
